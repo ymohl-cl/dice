@@ -1,44 +1,26 @@
 package main
 
-import "github.com/ymohl-cl/dice/pkg/loto"
-
-var (
-	files = []string{
-		"../../resources/loto_201902.csv",
-		"../../resources/loto_201911.csv",
-		"../../resources/loto2017.csv",
-		"../../resources/nouveau_loto.csv",
-	}
-	//"../../resources/loto.csv",
+import (
+	"github.com/ymohl-cl/dice/pkg/loto"
 )
 
 func main() {
 	var l loto.Loto
 	var err error
+	var gPredict loto.GeneralPredict
+	var bPredict loto.BallsPredict
 
-	if l, err = loto.New(files); err != nil {
+	if l, err = loto.New(); err != nil {
 		panic(err)
 	}
-	l.Print()
+
+	if gPredict, err = l.GeneralPrediction(loto.Option{}); err != nil {
+		panic(err)
+	}
+	if bPredict, err = l.BallsPrediction(loto.Option{}); err != nil {
+		panic(err)
+	}
+	gPredict.Print()
+	bPredict.Print()
 	return
 }
-
-/*
-	nbFace = 6
-	if d, err = dice.New(nbFace); err != nil {
-		panic(err)
-	}
-	for i := 0; i < 1000; i++ {
-		_ = d.Throw()
-		// fmt.Printf("throw number %d with result %d\n", i, v)
-	}
-
-	fmt.Println("verification")
-	for i := 0; i < int(nbFace); i++ {
-		v := d.Result(int32(i) + 1)
-		fmt.Printf("%d face was returned %d times\n", i+1, v)
-	}
-
-
-
-*/

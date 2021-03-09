@@ -1,77 +1,112 @@
 package loto
 
-import (
-	"fmt"
-
-	"github.com/ymohl-cl/dice/pkg/dice"
-)
-
+// Loto data interface
 type Loto interface {
-	Print()
+	GeneralPrediction(opt Option) (GeneralPredict, error)
+	BallsPrediction(opt Option) (BallsPredict, error)
 }
 
 type loto struct {
-	d1    dice.Dice
-	d2    dice.Dice
-	d3    dice.Dice
-	d4    dice.Dice
-	d5    dice.Dice
-	joker dice.Dice
+	history History
 }
 
 // New loto instance with the loading of loto hitory
-func New(historyFiles []string) (Loto, error) {
+func New() (Loto, error) {
 	var l loto
 	var err error
 
-	if l.d1, err = dice.New(49); err != nil {
+	if l.history, err = NewHistory(); err != nil {
 		return nil, err
 	}
-	if l.d2, err = dice.New(49); err != nil {
-		return nil, err
-	}
-	if l.d3, err = dice.New(49); err != nil {
-		return nil, err
-	}
-	if l.d4, err = dice.New(49); err != nil {
-		return nil, err
-	}
-	if l.d5, err = dice.New(49); err != nil {
-		return nil, err
-	}
-	if l.joker, err = dice.New(10); err != nil {
-		return nil, err
-	}
-
-	for _, f := range historyFiles {
-		var history []Draw
-
-		if history, err = NewHistory(f); err != nil {
-			return nil, err
-		}
-		for _, draw := range history {
-			l.parseDraw(draw)
-		}
-	}
-
 	return &l, nil
 }
 
-func (l *loto) parseDraw(d Draw) {
-	l.d1.SetThrow(d.B1)
-	l.d2.SetThrow(d.B2)
-	l.d3.SetThrow(d.B3)
-	l.d4.SetThrow(d.B4)
-	l.d5.SetThrow(d.B5)
-	l.joker.SetThrow(d.Joker)
+func (l loto) GeneralPrediction(opt Option) (GeneralPredict, error) {
+	var predict GeneralPredict
+	var nb int64
+	var err error
+
+	if predict, err = NewGeneralPredict(); err != nil {
+		return GeneralPredict{}, err
+	}
+
+	nb = opt.NumberDraws
+	if opt.NumberDraws == 0 {
+		nb = int64(len(l.history.RecentDraws))
+	}
+	for _, d := range l.history.RecentDraws[:nb] {
+		predict.Balls.SetThrow(d.B1)
+		predict.Balls.SetThrow(d.B2)
+		predict.Balls.SetThrow(d.B3)
+		predict.Balls.SetThrow(d.B4)
+		predict.Balls.SetThrow(d.B5)
+		predict.Joker.SetThrow(d.Joker)
+	}
+	if !opt.Old {
+		// dont use the optionnal old throws
+		return predict, nil
+	}
+
+	for _, d := range l.history.OldDraws {
+		predict.Balls.SetThrow(d.B1)
+		predict.Balls.SetThrow(d.B2)
+		predict.Balls.SetThrow(d.B3)
+		predict.Balls.SetThrow(d.B4)
+		predict.Balls.SetThrow(d.B5)
+		if opt.Old6thBall {
+			// optionnal 6th ball (value 1 to 49)
+			predict.Balls.SetThrow(d.B6)
+		}
+		if opt.OldLuckyBall {
+			// optionnal lucky ball (value 1 to 49)
+			predict.Balls.SetThrow(d.Joker)
+		}
+	}
+	return predict, nil
 }
 
-// Print info about the loto
-func (l loto) Print() {
-	fmt.Printf("D1 has number throw: %d and weaklestface %v\n", l.d1.NbThrow(), l.d1.WeaklestFaces())
-	fmt.Printf("D2 has number throw: %d and weaklestface %v\n", l.d2.NbThrow(), l.d2.WeaklestFaces())
-	fmt.Printf("D3 has number throw: %d and weaklestface %v\n", l.d3.NbThrow(), l.d3.WeaklestFaces())
-	fmt.Printf("D4 has number throw: %d and weaklestface %v\n", l.d4.NbThrow(), l.d4.WeaklestFaces())
-	fmt.Printf("D5 has number throw: %d and weaklestface %v\n", l.d5.NbThrow(), l.d5.WeaklestFaces())
-	fmt.Printf("Djoker has number throw: %d and weaklestface %v\n", l.joker.NbThrow(), l.joker.WeaklestFaces())
+func (l loto) BallsPrediction(opt Option) (BallsPredict, error) {
+	var err error
+	var predict BallsPredict
+
+	if predict, err = NewBallsPredict(); err != nil {
+		return BallsPredict{}, err
+	}
+	for _, d := range l.history.RecentDraws {
+		predict.Ball1.SetThrow(d.B1)
+		predict.Ball2.SetThrow(d.B2)
+		predict.Ball3.SetThrow(d.B3)
+		predict.Ball4.SetThrow(d.B4)
+		predict.Ball5.SetThrow(d.B5)
+		predict.Joker.SetThrow(d.Joker)
+	}
+	if !opt.Old {
+		// dont use the optionnal old throws
+		return predict, nil
+	}
+
+	for _, d := range l.history.OldDraws {
+		predict.Ball1.SetThrow(d.B1)
+		predict.Ball2.SetThrow(d.B2)
+		predict.Ball3.SetThrow(d.B3)
+		predict.Ball4.SetThrow(d.B4)
+		predict.Ball5.SetThrow(d.B5)
+		if opt.Old6thBall {
+			// optionnal 6th ball (value 1 to 49)
+			predict.Ball1.SetThrow(d.B6)
+			predict.Ball2.SetThrow(d.B6)
+			predict.Ball3.SetThrow(d.B6)
+			predict.Ball4.SetThrow(d.B6)
+			predict.Ball5.SetThrow(d.B6)
+		}
+		if opt.OldLuckyBall {
+			// optionnal lucky ball (value 1 to 49)
+			predict.Ball1.SetThrow(d.Joker)
+			predict.Ball2.SetThrow(d.Joker)
+			predict.Ball3.SetThrow(d.Joker)
+			predict.Ball4.SetThrow(d.Joker)
+			predict.Ball5.SetThrow(d.Joker)
+		}
+	}
+	return predict, nil
 }

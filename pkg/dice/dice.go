@@ -2,8 +2,10 @@ package dice
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"math/rand"
+	"sort"
 	"time"
 )
 
@@ -15,6 +17,8 @@ type Dice interface {
 	Result(face int32) int64
 	NbThrow() int64
 	WeaklestFaces() []int32
+	Order() (faces []int32, results []int64)
+	String() string
 }
 
 type dice struct {
@@ -82,10 +86,8 @@ func (d dice) WeaklestFaces() []int32 {
 	var values []int32
 	var min int64
 
-	//	fmt.Printf("RESULT: ---------------------------\n\n")
 	min = math.MaxInt64
 	for face, v := range d.facesResult {
-		//		fmt.Printf("face %d with number result %d\n", face, v)
 		if v < min {
 			min = v
 			values = append([]int32{}, face)
@@ -94,4 +96,46 @@ func (d dice) WeaklestFaces() []int32 {
 		}
 	}
 	return values
+}
+
+// String return a printable data info about the dice
+func (d dice) String() string {
+	result := fmt.Sprintf("the dice has %d number face and has be trow %d times.\n", d.nbFace, d.nbThrow)
+	result += fmt.Sprintf("on the next, the number time to get the face number by face:\n")
+
+	for f, nb := range d.facesResult {
+		result += fmt.Sprintf("\t%d :=> %d\n", f, nb)
+	}
+	return result
+}
+
+// Order return the face in the croissant order
+// first returned parameter describe the face (in the result order)
+// second returned parameter describe the results (in the result order)
+func (d dice) Order() ([]int32, []int64) {
+	var orderFaces []int32
+	results := make([]int64, 0, len(d.facesResult))
+
+	for _, v := range d.facesResult {
+		results = append(results, v)
+	}
+	// result to order operation
+	sort.Slice(results, func(i, j int) bool {
+		return results[i] < results[j]
+	})
+
+	save := int64(-1)
+	for _, r := range results {
+		if r == save {
+			continue
+		}
+		save = r
+		for f, v := range d.facesResult {
+			if r == v {
+				orderFaces = append(orderFaces, f)
+			}
+		}
+	}
+
+	return orderFaces, results
 }
