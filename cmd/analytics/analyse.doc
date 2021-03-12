@@ -1,0 +1,111 @@
+faces [8 39 34 12 19] && joker 6
+
+-----
+general prediction with get more probabilities draw after each trow
+
+5Balls and lucky number: 0
+5Balls without lucky number: 0
+4Balls and lucky number: 0
+4Balls without lucky number: 0
+3Balls and lucky number: 1
+3Balls without lucky number: 5
+2Balls and lucky number: 18
+2Balls without lucky number: 116
+1Balls and lucky number: 68
+1Balls without lucky number: 609
+0Balls and lucky number: 119
+0Balls without lucky number: 908
+
+total cost 1870.400000 to total win 1403.300000 (€) to total benefit: -467.100000
+
+-----
+static solution with following balls [25 7 47 23 14] and joker number 5 for each trows
+
+5Balls and lucky number: 0
+5Balls without lucky number: 0
+4Balls and lucky number: 1
+4Balls without lucky number: 0
+3Balls and lucky number: 1
+3Balls without lucky number: 10
+2Balls and lucky number: 18
+2Balls without lucky number: 125
+1Balls and lucky number: 69
+1Balls without lucky number: 543
+0Balls and lucky number: 119
+0Balls without lucky number: 958
+
+total cost 1870.400000 to total win 3611.100000 (€) to total benefit: 1740.700000
+
+-----
+static solution with following balls [48 15 37 3 5] and joker number 4 for each trows
+
+5Balls and lucky number: 0
+5Balls without lucky number: 0
+4Balls and lucky number: 0
+4Balls without lucky number: 0
+3Balls and lucky number: 1
+3Balls without lucky number: 6
+2Balls and lucky number: 16
+2Balls without lucky number: 116
+1Balls and lucky number: 69
+1Balls without lucky number: 583
+0Balls and lucky number: 96
+0Balls without lucky number: 957
+
+total cost 1870.400000 to total win 1347.200000 (€) to total benefit: -523.200000
+
+-----
+static solution with following balls [20 19 37 26 41] and joker number 2 for each trows
+
+5Balls and lucky number: 0
+5Balls without lucky number: 0
+4Balls and lucky number: 0
+4Balls without lucky number: 0
+3Balls and lucky number: 1
+3Balls without lucky number: 6
+2Balls and lucky number: 16
+2Balls without lucky number: 118
+1Balls and lucky number: 63
+1Balls without lucky number: 606
+0Balls and lucky number: 90
+0Balls without lucky number: 944
+
+total cost 1870.400000 to total win 1330.200000 (€) to total benefit: -540.200000
+faces [45 25 48 47 30] && joker 6
+
+-----
+general prediction with get more 15 balls proba and 4 joker proba to random selection (seed: 42)
+
+5Balls and lucky number: 0
+5Balls without lucky number: 0
+4Balls and lucky number: 1
+4Balls without lucky number: 0
+3Balls and lucky number: 1
+3Balls without lucky number: 10
+2Balls and lucky number: 21
+2Balls without lucky number: 100
+1Balls and lucky number: 68
+1Balls without lucky number: 622
+0Balls and lucky number: 101
+0Balls without lucky number: 920
+
+total cost 1870.400000 to total win 3495.900000 (€) to total benefit: 1625.500000
+faces [39 47 46 19 8] && joker 8
+
+-----
+general prediction with get more 15 balls proba and 4 joker proba to random selection (seed: 1680339887)
+
+5Balls and lucky number: 0
+5Balls without lucky number: 0
+4Balls and lucky number: 0
+4Balls without lucky number: 0
+3Balls and lucky number: 1
+3Balls without lucky number: 5
+2Balls and lucky number: 15
+2Balls without lucky number: 130
+1Balls and lucky number: 55
+1Balls without lucky number: 620
+0Balls and lucky number: 100
+0Balls without lucky number: 918
+
+total cost 1870.400000 to total win 1354.600000 (€) to total benefit: -515.800000

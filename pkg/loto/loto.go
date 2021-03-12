@@ -1,9 +1,14 @@
 package loto
 
+import (
+	"errors"
+)
+
 // Loto data interface
 type Loto interface {
 	GeneralPrediction(opt Option) (GeneralPredict, error)
 	BallsPrediction(opt Option) (BallsPredict, error)
+	History() History
 }
 
 type loto struct {
@@ -23,18 +28,37 @@ func New() (Loto, error) {
 
 func (l loto) GeneralPrediction(opt Option) (GeneralPredict, error) {
 	var predict GeneralPredict
-	var nb int64
+	var indexOut int
 	var err error
 
 	if predict, err = NewGeneralPredict(); err != nil {
 		return GeneralPredict{}, err
 	}
 
-	nb = opt.NumberDraws
-	if opt.NumberDraws == 0 {
-		nb = int64(len(l.history.RecentDraws))
+	if opt.NumberDraws > int64(len(l.history.RecentDraws[opt.Index:])) {
+		return GeneralPredict{}, errors.New("invalid option number draw is bigger than len of Recent Draws")
 	}
-	for _, d := range l.history.RecentDraws[:nb] {
+	if opt.Index >= len(l.history.RecentDraws) {
+		return GeneralPredict{}, errors.New("invalid index to start exploration draw")
+	}
+	/*
+		if opt.Index > 0 {
+			fmt.Printf("date to start: %s and date to predict: %s\n", l.history.RecentDraws[opt.Index].Date, l.history.RecentDraws[opt.Index-1].Date)
+		} else {
+			fmt.Printf("date to start: %s and no predict index == 0\n", l.history.RecentDraws[opt.Index].Date)
+		}*/
+	indexOut = opt.Index + int(opt.NumberDraws)
+	if opt.NumberDraws == 0 {
+		indexOut = opt.Index + len(l.history.RecentDraws[opt.Index:])
+	}
+	/* tmp add monday trow */
+	predict.Balls.SetThrow(int32(8))
+	predict.Balls.SetThrow(int32(19))
+	predict.Balls.SetThrow(int32(24))
+	predict.Balls.SetThrow(int32(38))
+	predict.Balls.SetThrow(int32(40))
+	predict.Joker.SetThrow(int32(10))
+	for _, d := range l.history.RecentDraws[opt.Index:indexOut] {
 		predict.Balls.SetThrow(d.B1)
 		predict.Balls.SetThrow(d.B2)
 		predict.Balls.SetThrow(d.B3)
@@ -109,4 +133,9 @@ func (l loto) BallsPrediction(opt Option) (BallsPredict, error) {
 		}
 	}
 	return predict, nil
+}
+
+// History getter
+func (l loto) History() History {
+	return l.history
 }

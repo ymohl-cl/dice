@@ -2,8 +2,10 @@ package loto
 
 import (
 	"encoding/csv"
+	"errors"
 	"io"
 	"os"
+	"sort"
 
 	"github.com/jszwec/csvutil"
 )
@@ -86,7 +88,7 @@ func Parse(file string, newData func() interface{}, addData func(data interface{
 	return nil
 }
 
-// NewHistory read the file parameter to extract the draw history
+// NewHistory read the files parameter to extract the draw history in date order
 func NewHistory() (History, error) {
 	var err error
 	var h History
@@ -100,6 +102,7 @@ func NewHistory() (History, error) {
 			return History{}, err
 		}
 	}
+
 	for _, f := range recentFiles {
 		if err = Parse(f, func() interface{} {
 			return &Draw{}
@@ -110,4 +113,35 @@ func NewHistory() (History, error) {
 		}
 	}
 	return h, nil
+}
+
+// OrderRecent the recent list
+func (h *History) OrderRecent() {
+	sort.Slice(h.RecentDraws, func(i, j int) bool {
+		return h.RecentDraws[i].ID < h.RecentDraws[j].ID
+	})
+}
+
+// OrderOld the old list
+func (h *History) OrderOld() {
+	sort.Slice(h.OldDraws, func(i, j int) bool {
+		return h.OldDraws[i].ID < h.OldDraws[j].ID ||
+			(h.OldDraws[i].ID == h.OldDraws[j].ID && h.OldDraws[i].Tirage < h.OldDraws[j].Tirage)
+	})
+}
+
+// DrawByIndex getter not available on old history
+func (h History) DrawByIndex(index int) (Draw, error) {
+	if index < 0 {
+		return Draw{}, errors.New("invalid index < 0")
+	}
+	if len(h.RecentDraws) <= index {
+		return Draw{}, errors.New("invalid index to get the draw by index")
+	}
+	return h.RecentDraws[index], nil
+}
+
+// Len getter not available on old history
+func (h History) Len() int {
+	return len(h.RecentDraws)
 }
