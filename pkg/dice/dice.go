@@ -6,7 +6,6 @@ import (
 	"math"
 	"math/rand"
 	"sort"
-	"time"
 )
 
 // Dice describe a dice and the history
@@ -38,7 +37,7 @@ func New(nbFace int32) (Dice, error) {
 	d := dice{
 		facesResult: make(map[int32]int64),
 		nbFace:      nbFace,
-		random:      rand.New(rand.NewSource(time.Now().UnixNano())),
+		//	random:      rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 	for i := 0; i < int(nbFace); i++ {
 		d.facesResult[int32(i)+1] = 0

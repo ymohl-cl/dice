@@ -4,19 +4,19 @@ import "fmt"
 
 // Prices values
 var (
-	PriceN5AndLucky float64 = 2000000.0
-	PriceN5         float64 = 159957.0
-	PriceN4AndLucky float64 = 2054.80
-	PriceN4         float64 = 430.60
-	PriceN3AndLucky float64 = 73.60
-	PriceN3         float64 = 21.70
-	PriceN2AndLucky float64 = 14.70
-	PriceN2         float64 = 4.70
-	PriceN1AndLucky float64 = 2.2
-	PriceN1         float64 = 0.0
-	PriceN0AndLucky float64 = 2.2
-	PriceN0         float64 = 0.0
-	CostTicket      float64 = 2.2
+	PriceN5AndLucky = 2000000.0
+	PriceN5         = 159957.0
+	PriceN4AndLucky = 2054.80
+	PriceN4         = 430.60
+	PriceN3AndLucky = 73.60
+	PriceN3         = 21.70
+	PriceN2AndLucky = 14.70
+	PriceN2         = 4.70
+	PriceN1AndLucky = 2.2
+	PriceN1         = 0.0
+	PriceN0AndLucky = 2.2
+	PriceN0         = 0.0
+	CostTicket      = 2.2
 )
 
 // Reward statistique
@@ -113,39 +113,36 @@ func (r Reward) String() string {
 }
 
 // Price return the cost and win value to participation
-func (r Reward) Price() (float64, float64) {
-	var cost float64
-	var win float64
-
+func (r Reward) Price() (cost float64, win float64) {
 	win += float64(r.n5AndLucky) * PriceN5AndLucky
-	cost += float64(r.n5AndLucky) + CostTicket
+	cost += float64(r.n5AndLucky) * CostTicket
 	win += float64(r.n5) * PriceN5
-	cost += float64(r.n5) + CostTicket
+	cost += float64(r.n5) * CostTicket
 
 	win += float64(r.n4AndLucky) * PriceN4AndLucky
-	cost += float64(r.n4AndLucky) + CostTicket
+	cost += float64(r.n4AndLucky) * CostTicket
 	win += float64(r.n4) * PriceN4
-	cost += float64(r.n4) + CostTicket
+	cost += float64(r.n4) * CostTicket
 
 	win += float64(r.n3AndLucky) * PriceN3AndLucky
-	cost += float64(r.n3AndLucky) + CostTicket
+	cost += float64(r.n3AndLucky) * CostTicket
 	win += float64(r.n3) * PriceN3
-	cost += float64(r.n3) + CostTicket
+	cost += float64(r.n3) * CostTicket
 
 	win += float64(r.n2AndLucky) * PriceN2AndLucky
-	cost += float64(r.n2AndLucky) + CostTicket
+	cost += float64(r.n2AndLucky) * CostTicket
 	win += float64(r.n2) * PriceN2
-	cost += float64(r.n2) + CostTicket
+	cost += float64(r.n2) * CostTicket
 
 	win += float64(r.n1AndLucky) * PriceN1AndLucky
-	cost += float64(r.n1AndLucky) + CostTicket
+	cost += float64(r.n1AndLucky) * CostTicket
 	win += float64(r.n1) * PriceN1
-	cost += float64(r.n1) + CostTicket
+	cost += float64(r.n1) * CostTicket
 
 	win += float64(r.n0AndLucky) * PriceN0AndLucky
-	cost += float64(r.n0AndLucky) + CostTicket
+	cost += float64(r.n0AndLucky) * CostTicket
 	win += float64(r.n0) * PriceN0
-	cost += float64(r.n0) + CostTicket
+	cost += float64(r.n0) * CostTicket
 
 	return cost, win
 }
